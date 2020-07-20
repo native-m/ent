@@ -68,6 +68,11 @@ namespace Hx
 		return m_entityFlags[e.GetID()].componentBits;
 	}
 
+	bool World::IsEntityValid(const Entity& e)
+	{
+		return m_entityFlags[e.GetID()].used;
+	}
+
 	void World::Update(double dt)
 	{
 	}

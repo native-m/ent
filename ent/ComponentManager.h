@@ -27,6 +27,9 @@ namespace Hx
 		C& GetComponent(const Entity& e);
 
 		template<class C>
+		const C& GetComponent(const Entity& e) const;
+
+		template<class C>
 		void DestroyComponent(const Entity& e);
 
 		void DestroyAllComponents(const Entity& e);
@@ -71,6 +74,17 @@ namespace Hx
 
 	template<class C>
 	inline C& ComponentManager::GetComponent(const Entity& e)
+	{
+		unsigned int componentId = Component<C>::id;
+		ComponentPoolBase* pool = m_componentPools[componentId].get();
+		C* component = nullptr;
+
+		component = reinterpret_cast<C*>(pool->Get(e.GetID()));
+		return *component;
+	}
+
+	template<class C>
+	inline const C& ComponentManager::GetComponent(const Entity& e) const
 	{
 		unsigned int componentId = Component<C>::id;
 		ComponentPoolBase* pool = m_componentPools[componentId].get();

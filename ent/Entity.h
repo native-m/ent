@@ -48,19 +48,26 @@ namespace Hx
 		}
 
 		template<class C, class... Args>
-		void AddComponent(Args&&... args)
+		Entity& AddComponent(Args&&... args)
 		{
 			m_world->AddComponent<C>(*this, std::forward<Args>(args)...);
+			return *this;
 		}
 
-		template<class C>
-		bool HasComponent() const
+		template<class C, class... Components>
+		bool HasComponents() const
 		{
-			return m_world->HasComponent<C>(*this);
+			return m_world->HasComponents<C, Components...>(*this);
 		}
 
 		template<class C>
 		C& GetComponent()
+		{
+			return m_world->GetComponent<C>(*this);
+		}
+
+		template<class C>
+		const C& GetComponent() const
 		{
 			return m_world->GetComponent<C>(*this);
 		}

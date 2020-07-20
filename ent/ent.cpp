@@ -14,11 +14,6 @@ struct Position
 		x(x), y(y)
 	{
 	}
-
-	~Position()
-	{
-
-	}
 };
 
 struct Direction
@@ -29,11 +24,11 @@ struct Direction
 		x(x), y(y)
 	{
 	}
+};
 
-	~Direction()
-	{
-		std::cout << "Direction Destructor" << std::endl;
-	}
+struct Renderable
+{
+
 };
 
 int main()
@@ -42,30 +37,35 @@ int main()
 	Hx::Entity e = w.CreateEntity();
 	Hx::Entity e1 = w.CreateEntity();
 	Hx::Entity e2 = w.CreateEntity();
+	Hx::EntityQueryView q = w.QueryWithComponents<Position, Direction>();
 	
-	e.AddComponent<Position>(2.0f, 3.0f);
-	e.AddComponent<Direction>(2.0f, 3.0f);
+	e.AddComponent<Position>(4.0f, 9.0f);
+	e.AddComponent<Direction>(7.0f, 3.0f);
 
-	e1.AddComponent<Position>(2.0f, 3.0f);
-	e1.AddComponent<Direction>(2.0f, 3.0f);
+	e1.AddComponent<Position>(4.0f, 4.0f);
+	e1.AddComponent<Direction>(7.0f, 3.0f);
 
-	e2.AddComponent<Position>(2.0f, 3.0f);
-	e2.AddComponent<Direction>(2.0f, 3.0f);
+	e2.AddComponent<Position>(5.0f, 2.0f);
+	e2.AddComponent<Direction>(6.0f, 8.0f);
 
-	Position pos = e2.GetComponent<Position>();
+	Hx::Entity myEntity = w.CreateEntity();
+	
+	myEntity.AddComponent<Position>(69.f, 69.f)
+			.AddComponent<Direction>(1.f, 0.f)
+			.AddComponent<Renderable>();
 
-	std::cout << pos.x << ", " << pos.y << std::endl;
+	q.Each([](Hx::Entity& e, Position& pos, Direction& dir) {
+			//pos.x += dir.x;
+			//pos.y += dir.y;
 
-	w.DestroyEntity(e);
-
-	e = w.CreateEntity();
-
-	e.AddComponent<Position>(4.0f, 5.0f);
-	e.AddComponent<Direction>(7.0f, 6.0f);
+			std::cout << "Position" << pos.x << ", " << pos.y << std::endl;
+			std::cout << "Direction" << dir.x << ", " << dir.y << std::endl;
+		});
 
 	w.DestroyEntity(e);
 	w.DestroyEntity(e1);
 	w.DestroyEntity(e2);
+	w.DestroyEntity(myEntity);
 
 	return 0;
 }
